@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
+//import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "../components/Navbar";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";

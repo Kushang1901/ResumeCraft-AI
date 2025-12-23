@@ -1,5 +1,5 @@
 ﻿import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
+//import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
@@ -93,7 +93,8 @@ Skills:
 ${formData.skills}
 `;
 
-        fetch("http://localhost:5000/generate", {
+        fetch(`${process.env.REACT_APP_API_URL}/generate`, {
+
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ prompt })

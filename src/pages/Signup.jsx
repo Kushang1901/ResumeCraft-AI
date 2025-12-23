@@ -58,7 +58,7 @@ export default function Signup() {
         try {
             const result = await signInWithPopup(auth, googleProvider);
 
-            await fetch("http://localhost:5000/signup", {
+            await fetch(`${process.env.REACT_APP_API_URL}/signup`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
