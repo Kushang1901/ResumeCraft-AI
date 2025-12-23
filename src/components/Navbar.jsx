@@ -1,6 +1,6 @@
 ﻿import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
+//import "bootstrap/dist/css/bootstrap.min.css";
 import { auth } from "../firebase";
 import { signOut } from "firebase/auth";
 import { subscribeToAuthChanges } from "../authState";
