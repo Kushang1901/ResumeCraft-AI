@@ -21,113 +21,159 @@ export default function Navbar() {
         alert("Logged out successfully");
     };
 
-    const closeMenu = () => setMenuOpen(false);
-
     return (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-black shadow-sm">
-            <div className="container">
+        <>
+            {/* TOP NAVBAR */}
+            <nav className="navbar navbar-dark bg-black shadow-sm fixed-top">
+                <div className="container d-flex justify-content-between align-items-center">
 
-                {/* LOGO */}
-                <Link
-                    className="navbar-brand fw-bold d-flex align-items-center gap-2"
-                    to="/"
-                    onClick={closeMenu}
-                >
-                    <img
-                        src={logo}
-                        alt="ResumeCraft AI Logo"
-                        style={{ height: "32px", width: "32px" }}
-                    />
-                    ResumeCraft AI
-                </Link>
+                    {/* LOGO */}
+                    <Link className="navbar-brand d-flex align-items-center gap-2" to="/">
+                        <img
+                            src={logo}
+                            alt="ResumeCraft AI Logo"
+                            style={{ height: "32px", width: "32px" }}
+                        />
+                        ResumeCraft AI
+                    </Link>
 
-                {/* HAMBURGER */}
-                <button
-                    className="navbar-toggler"
-                    type="button"
-                    onClick={() => setMenuOpen(!menuOpen)}
-                >
-                    <span className="navbar-toggler-icon"></span>
-                </button>
+                    {/* HAMBURGER (FIXED TOP-RIGHT) */}
+                    <button
+                        className="btn text-white fs-3 d-lg-none"
+                        onClick={() => setMenuOpen(true)}
+                        aria-label="Open menu"
+                    >
+                        ☰
+                    </button>
 
-                {/* MENU WITH ANIMATION */}
-                <div
-                    className={`navbar-collapse-wrapper ${menuOpen ? "open" : ""}`}
-                >
-                    <ul className="navbar-nav ms-auto text-center text-lg-start">
+                    {/* DESKTOP MENU */}
+                    <div className="d-none d-lg-flex align-items-center gap-4">
+                        <Link className="nav-link text-white" to="/">Home</Link>
 
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/" onClick={closeMenu}>
-                                Home
-                            </Link>
-                        </li>
-
-                        {user && (
+                        {user ? (
                             <>
-                                <li className="nav-item">
-                                    <span className="nav-link text-info fw-bold">
-                                        {user.displayName || user.email}
-                                    </span>
-                                </li>
-
-                                <li className="nav-item">
-                                    <button
-                                        className="btn btn-outline-danger mt-2 mt-lg-0 ms-lg-3"
-                                        onClick={handleLogout}
-                                    >
-                                        Logout
-                                    </button>
-                                </li>
+                                <span className="text-info fw-bold">
+                                    {user.displayName || user.email}
+                                </span>
+                                <button
+                                    className="btn btn-outline-danger"
+                                    onClick={handleLogout}
+                                >
+                                    Logout
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <Link className="nav-link text-white" to="/signup">Sign Up</Link>
+                                <Link className="nav-link text-white" to="/login">Login</Link>
                             </>
                         )}
-
-                        {!user && (
-                            <>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/signup" onClick={closeMenu}>
-                                        Sign Up
-                                    </Link>
-                                </li>
-
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/login" onClick={closeMenu}>
-                                        Login
-                                    </Link>
-                                </li>
-                            </>
-                        )}
-
-                    </ul>
+                    </div>
                 </div>
+            </nav>
 
-            </div>
+            {/* MOBILE FULLSCREEN MENU */}
+            {menuOpen && (
+                <div className="mobile-menu-overlay">
+                    <button
+                        className="close-btn"
+                        onClick={() => setMenuOpen(false)}
+                        aria-label="Close menu"
+                    >
+                        ✕
+                    </button>
 
-            {/* INLINE CSS FOR SMOOTH ANIMATION */}
+                    <div className="mobile-menu-content">
+                        <Link to="/" onClick={() => setMenuOpen(false)}>Home</Link>
+
+                        {user ? (
+                            <>
+                                <span className="user-name">
+                                    {user.displayName || user.email}
+                                </span>
+                                <button className="btn btn-outline-danger mt-3" onClick={handleLogout}>
+                                    Logout
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <Link to="/signup" onClick={() => setMenuOpen(false)}>Sign Up</Link>
+                                <Link to="/login" onClick={() => setMenuOpen(false)}>Login</Link>
+                            </>
+                        )}
+                    </div>
+                </div>
+            )}
+
+            {/* STYLES */}
             <style>{`
-                .navbar-collapse-wrapper {
-                    overflow: hidden;
-                    max-height: 0;
-                    opacity: 0;
-                    transform: translateY(-10px);
-                    transition: all 0.4s ease;
+                body {
+                    padding-top: 70px;
                 }
 
-                .navbar-collapse-wrapper.open {
-                    max-height: 400px;
-                    opacity: 1;
-                    transform: translateY(0);
+                .mobile-menu-overlay {
+                    position: fixed;
+                    inset: 0;
+                    background: rgba(0, 0, 0, 0.95);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 2000;
+                    animation: fadeIn 0.3s ease;
                 }
 
-                @media (min-width: 992px) {
-                    .navbar-collapse-wrapper {
-                        max-height: none;
+                .mobile-menu-content {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 24px;
+                    font-size: 1.5rem;
+                    animation: scaleIn 0.35s ease;
+                }
+
+                .mobile-menu-content a {
+                    color: white;
+                    text-decoration: none;
+                    font-weight: 600;
+                }
+
+                .mobile-menu-content a:hover {
+                    color: #0dcaf0;
+                }
+
+                .user-name {
+                    color: #0dcaf0;
+                    font-weight: bold;
+                    text-align: center;
+                }
+
+                .close-btn {
+                    position: absolute;
+                    top: 20px;
+                    right: 24px;
+                    font-size: 2rem;
+                    background: none;
+                    border: none;
+                    color: white;
+                    cursor: pointer;
+                }
+
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+
+                @keyframes scaleIn {
+                    from {
+                        opacity: 0;
+                        transform: scale(0.9);
+                    }
+                    to {
                         opacity: 1;
-                        transform: none;
-                        display: flex !important;
-                        justify-content: flex-end;
+                        transform: scale(1);
                     }
                 }
             `}</style>
-        </nav>
+        </>
     );
 }
