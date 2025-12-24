@@ -6,154 +6,151 @@ import { subscribeToAuthChanges } from "../authState";
 import logo from "../assets/logo.png";
 
 export default function Navbar() {
-  const [user, setUser] = useState(null);
-  const [menuOpen, setMenuOpen] = useState(false);
+    const [user, setUser] = useState(null);
+    const [menuOpen, setMenuOpen] = useState(false);
 
-  useEffect(() => {
-    subscribeToAuthChanges((loggedUser) => {
-      setUser(loggedUser);
-    });
-  }, []);
+    useEffect(() => {
+        const unsub = subscribeToAuthChanges((loggedUser) => {
+            setUser(loggedUser);
+        });
+        return () => unsub && unsub();
+    }, []);
 
-  const handleLogout = async () => {
-    await signOut(auth);
-    setMenuOpen(false);
-    alert("Logged out successfully");
-  };
+    const handleLogout = async () => {
+        await signOut(auth);
+        setMenuOpen(false);
+    };
 
-  return (
-    <>
-      {/* NAVBAR */}
-      <nav className="bg-white shadow-md fixed w-full top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            {/* LOGO */}
-            <Link to="/" className="flex items-center space-x-2 group">
-              <img 
-                src={logo} 
-                alt="Logo" 
-                className="h-10 w-10 transition-transform group-hover:scale-110"
-              />
-              <span className="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors">
-                ResumeCraft AI
-              </span>
-            </Link>
+    return (
+        <>
+            {/* NAVBAR */}
+            <nav className="fixed top-0 left-0 w-full z-50 bg-black border-b border-gray-800">
+                <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
 
-            {/* DESKTOP MENU */}
-            <div className="hidden md:flex items-center space-x-8">
-              <Link 
-                to="/" 
-                className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-              >
-                Home
-              </Link>
-              
-              {user ? (
-                <>
-                  <span className="text-gray-600 text-sm">
-                    {user.displayName || user.email}
-                  </span>
-                  <button
-                    onClick={handleLogout}
-                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-                  >
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/signup"
-                    className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                  >
-                    Sign Up
-                  </Link>
-                  <Link
-                    to="/login"
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-                  >
-                    Login
-                  </Link>
-                </>
-              )}
-            </div>
+                    {/* LOGO */}
+                    <Link to="/" className="flex items-center gap-2">
+                        <img src={logo} alt="Logo" className="h-8 w-8" />
+                        <span className="text-white font-semibold text-lg">
+                            ResumeCraft AI
+                        </span>
+                    </Link>
 
-            {/* HAMBURGER BUTTON */}
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden text-gray-700 hover:text-blue-600 focus:outline-none"
-              aria-label="Toggle menu"
-            >
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                {menuOpen ? (
-                  <path d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
-            </button>
-          </div>
-        </div>
+                    {/* DESKTOP MENU */}
+                    <div className="hidden md:flex items-center gap-8">
+                        <NavLink to="/">Home</NavLink>
 
-        {/* MOBILE MENU */}
-        <div
-          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-            menuOpen ? "max-h-96" : "max-h-0"
-          }`}
-        >
-          <div className="px-4 pt-2 pb-4 space-y-3 bg-gray-50 border-t">
-            <Link
-              to="/"
-              onClick={() => setMenuOpen(false)}
-              className="block text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors"
-            >
-              Home
-            </Link>
-            
-            {user ? (
-              <>
-                <div className="text-gray-600 text-sm py-2 border-t">
-                  {user.displayName || user.email}
+                        {user ? (
+                            <>
+                                <span className="text-gray-400 text-sm max-w-[180px] truncate">
+                                    {user.displayName || user.email}
+                                </span>
+                                <button
+                                    onClick={handleLogout}
+                                    className="px-4 py-2 text-sm rounded-md border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition"
+                                >
+                                    Logout
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <NavLink to="/signup">Sign Up</NavLink>
+                                <Link
+                                    to="/login"
+                                    className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white text-sm transition"
+                                >
+                                    Login
+                                </Link>
+                            </>
+                        )}
+                    </div>
+
+                    {/* HAMBURGER */}
+                    <button
+                        className="md:hidden text-white"
+                        onClick={() => setMenuOpen(!menuOpen)}
+                        aria-label="Toggle Menu"
+                    >
+                        <svg
+                            className="h-6 w-6"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            viewBox="0 0 24 24"
+                        >
+                            {menuOpen ? (
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            ) : (
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                            )}
+                        </svg>
+                    </button>
                 </div>
-                <button
-                  onClick={handleLogout}
-                  className="w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/signup"
-                  onClick={() => setMenuOpen(false)}
-                  className="block text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors"
-                >
-                  Sign Up
-                </Link>
-                <Link
-                  to="/login"
-                  onClick={() => setMenuOpen(false)}
-                  className="block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-center transition-colors"
-                >
-                  Login
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
-      </nav>
 
-      {/* SPACER */}
-      <div className="h-16"></div>
-    </>
-  );
+                {/* MOBILE MENU */}
+                <div
+                    className={`md:hidden fixed inset-0 bg-black/95 backdrop-blur-sm transition-all duration-300 ${
+                        menuOpen ? "opacity-100 visible" : "opacity-0 invisible"
+                    }`}
+                >
+                    <div className="h-full flex flex-col items-center justify-center gap-8 text-lg">
+
+                        <MobileLink to="/" onClick={() => setMenuOpen(false)}>
+                            Home
+                        </MobileLink>
+
+                        {user ? (
+                            <>
+                                <span className="text-gray-400 text-sm px-6 text-center">
+                                    {user.displayName || user.email}
+                                </span>
+                                <button
+                                    onClick={handleLogout}
+                                    className="px-6 py-3 rounded-md border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition"
+                                >
+                                    Logout
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <MobileLink to="/signup" onClick={() => setMenuOpen(false)}>
+                                    Sign Up
+                                </MobileLink>
+                                <MobileLink to="/login" onClick={() => setMenuOpen(false)}>
+                                    Login
+                                </MobileLink>
+                            </>
+                        )}
+                    </div>
+                </div>
+            </nav>
+
+            {/* SPACER */}
+            <div className="h-16" />
+        </>
+    );
+}
+
+/* ---------- Helper Components ---------- */
+
+function NavLink({ to, children }) {
+    return (
+        <Link
+            to={to}
+            className="text-gray-300 hover:text-white transition text-sm"
+        >
+            {children}
+        </Link>
+    );
+}
+
+function MobileLink({ to, children, onClick }) {
+    return (
+        <Link
+            to={to}
+            onClick={onClick}
+            className="text-white text-2xl font-medium hover:text-blue-500 transition"
+        >
+            {children}
+        </Link>
+    );
 }
