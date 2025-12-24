@@ -41,7 +41,7 @@ export default function Navbar() {
                     ResumeCraft AI
                 </Link>
 
-                {/* HAMBURGER BUTTON */}
+                {/* HAMBURGER */}
                 <button
                     className="navbar-toggler"
                     type="button"
@@ -50,9 +50,11 @@ export default function Navbar() {
                     <span className="navbar-toggler-icon"></span>
                 </button>
 
-                {/* MENU */}
-                <div className={`collapse navbar-collapse ${menuOpen ? "show" : ""}`}>
-                    <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+                {/* MENU WITH ANIMATION */}
+                <div
+                    className={`navbar-collapse-wrapper ${menuOpen ? "open" : ""}`}
+                >
+                    <ul className="navbar-nav ms-auto text-center text-lg-start">
 
                         <li className="nav-item">
                             <Link className="nav-link" to="/" onClick={closeMenu}>
@@ -70,7 +72,7 @@ export default function Navbar() {
 
                                 <li className="nav-item">
                                     <button
-                                        className="btn btn-outline-danger ms-lg-3 mt-2 mt-lg-0"
+                                        className="btn btn-outline-danger mt-2 mt-lg-0 ms-lg-3"
                                         onClick={handleLogout}
                                     >
                                         Logout
@@ -97,7 +99,35 @@ export default function Navbar() {
 
                     </ul>
                 </div>
+
             </div>
+
+            {/* INLINE CSS FOR SMOOTH ANIMATION */}
+            <style>{`
+                .navbar-collapse-wrapper {
+                    overflow: hidden;
+                    max-height: 0;
+                    opacity: 0;
+                    transform: translateY(-10px);
+                    transition: all 0.4s ease;
+                }
+
+                .navbar-collapse-wrapper.open {
+                    max-height: 400px;
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+
+                @media (min-width: 992px) {
+                    .navbar-collapse-wrapper {
+                        max-height: none;
+                        opacity: 1;
+                        transform: none;
+                        display: flex !important;
+                        justify-content: flex-end;
+                    }
+                }
+            `}</style>
         </nav>
     );
 }
