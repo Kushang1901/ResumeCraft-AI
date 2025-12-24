@@ -132,7 +132,7 @@ export default function Navbar() {
                 }
 
                 .mobile-menu-content a {
-                    color: white;
+                    color: black;
                     text-decoration: none;
                     font-weight: 600;
                 }
@@ -183,4 +183,5 @@ export default function Navbar() {
         </>
     );
 }
+
 
