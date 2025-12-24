@@ -173,7 +173,14 @@ export default function Navbar() {
                         transform: scale(1);
                     }
                 }
+
+                .navbar {
+    box-shadow: none !important;
+    border-bottom: none !important;
+}
+
             `}</style>
         </>
     );
 }
+
