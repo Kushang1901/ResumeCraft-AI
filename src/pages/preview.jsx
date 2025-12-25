@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-//import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "../components/Navbar";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
@@ -12,12 +11,8 @@ export default function Preview() {
         const savedData = sessionStorage.getItem("resumeData");
         const savedAI = sessionStorage.getItem("aiOutput");
 
-        if (savedData) {
-            setResumeData(JSON.parse(savedData));
-        }
-        if (savedAI) {
-            setAiOutput(savedAI);
-        }
+        if (savedData) setResumeData(JSON.parse(savedData));
+        if (savedAI) setAiOutput(savedAI);
     }, []);
 
     const handleEdit = () => {
@@ -38,8 +33,6 @@ export default function Preview() {
         pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
         pdf.save("Resume.pdf");
     };
-    const userSummary = resumeData?.professionalSummary;
-
 
     if (!resumeData) {
         return (
@@ -55,7 +48,7 @@ export default function Preview() {
     }
 
     const skillsArray = resumeData.skills
-        ? resumeData.skills.split(",").map(skill => skill.trim())
+        ? resumeData.skills.split(",").map(s => s.trim())
         : [];
 
     return (
@@ -74,14 +67,13 @@ export default function Preview() {
                     </button>
                 </div>
 
-                {/* RESUME PREVIEW */}
+                {/* RESUME */}
                 <div
                     id="resume-preview"
                     className="bg-white text-dark p-5 rounded shadow"
                 >
-
                     {/* HEADER */}
-                    <div className="mb-4 border-bottom pb-3 text-center">
+                    <div className="text-center border-bottom pb-3 mb-4">
                         <h1 className="fw-bold">{resumeData.fullName}</h1>
                         <p className="mb-0">
                             {resumeData.email} | {resumeData.phone}
@@ -89,43 +81,52 @@ export default function Preview() {
                     </div>
 
                     {/* PROFESSIONAL SUMMARY */}
-                    {(aiOutput || userSummary) && (
+                    {(aiOutput || resumeData.professionalSummary) && (
                         <div className="mb-4">
                             <h3 className="fw-bold border-bottom pb-2">
                                 Professional Summary
                             </h3>
-
                             <p style={{ whiteSpace: "pre-line" }}>
                                 {aiOutput && aiOutput !== "undefined"
                                     ? aiOutput
-                                    : userSummary}
+                                    : resumeData.professionalSummary}
                             </p>
                         </div>
                     )}
-
 
                     {/* EDUCATION */}
                     <div className="mb-4">
                         <h3 className="fw-bold border-bottom pb-2">Education</h3>
 
-                        <h5 className="mt-3">Graduation</h5>
-                        <p className="mb-1">
-                            {resumeData.graduation?.course}
-                        </p>
-                        <p className="text-muted">
-                            {resumeData.graduation?.startYear} – {resumeData.graduation?.endYear}
-                        </p>
+                        {/* GRADUATION */}
+                        <div className="mt-3">
+                            <h5 className="fw-semibold">Graduation</h5>
+                            <p className="mb-1">{resumeData.graduation?.course}</p>
+                            <p className="text-muted">
+                                {resumeData.graduation?.startYear} – {resumeData.graduation?.endYear}
+                            </p>
+                        </div>
 
+                        {/* POST GRADUATION */}
                         {resumeData.hasPostGraduation && (
-                            <>
-                                <h5 className="mt-3">Post Graduation</h5>
-                                <p className="mb-1">
-                                    {resumeData.postGraduation?.course}
-                                </p>
+                            <div className="mt-3">
+                                <h5 className="fw-semibold">Post Graduation</h5>
+                                <p className="mb-1">{resumeData.postGraduation?.course}</p>
                                 <p className="text-muted">
                                     {resumeData.postGraduation?.startYear} – {resumeData.postGraduation?.endYear}
                                 </p>
-                            </>
+                            </div>
+                        )}
+
+                        {/* PhD */}
+                        {resumeData.hasPhd && (
+                            <div className="mt-3">
+                                <h5 className="fw-semibold">PhD</h5>
+                                <p className="mb-1">{resumeData.phd?.course}</p>
+                                <p className="text-muted">
+                                    {resumeData.phd?.startYear} – {resumeData.phd?.endYear}
+                                </p>
+                            </div>
                         )}
                     </div>
 
@@ -140,27 +141,28 @@ export default function Preview() {
                     )}
 
                     {/* EXPERIENCE */}
-                    <div className="mb-4">
-                        <h3 className="fw-bold border-bottom pb-2">Experience</h3>
-                        <p style={{ whiteSpace: "pre-line" }}>
-                            {resumeData.experience}
-                        </p>
-                    </div>
+                    {resumeData.experience && (
+                        <div className="mb-4">
+                            <h3 className="fw-bold border-bottom pb-2">Experience</h3>
+                            <p style={{ whiteSpace: "pre-line" }}>
+                                {resumeData.experience}
+                            </p>
+                        </div>
+                    )}
 
                     {/* SKILLS */}
-                    <div className="mb-3">
-                        <h3 className="fw-bold border-bottom pb-2">Skills</h3>
-                        <div className="d-flex flex-wrap gap-2">
-                            {skillsArray.map((skill, index) => (
-                                <span
-                                    key={index}
-                                    className="badge bg-primary px-3 py-2"
-                                >
-                                    {skill}
-                                </span>
-                            ))}
+                    {skillsArray.length > 0 && (
+                        <div className="mb-3">
+                            <h3 className="fw-bold border-bottom pb-2">Skills</h3>
+                            <div className="d-flex flex-wrap gap-2">
+                                {skillsArray.map((skill, index) => (
+                                    <span key={index} className="badge bg-primary px-3 py-2">
+                                        {skill}
+                                    </span>
+                                ))}
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
 
@@ -174,7 +176,7 @@ export default function Preview() {
                             href="https://kushangacharya.vercel.app"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-info text-decoration-none fw-semibold"
+                            className="text-info fw-semibold text-decoration-none"
                         >
                             Kushang Acharya
                         </a>

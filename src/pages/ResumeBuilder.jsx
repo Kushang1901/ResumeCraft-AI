@@ -2,18 +2,25 @@
 //import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import { getRecaptchaToken } from "../utils/recaptcha";
+
 
 export default function ResumeBuilder() {
     const navigate = useNavigate();
+    const recaptchaToken = await getRecaptchaToken("GENERATE_RESUME");
 
-    /* ---------- YEARS LIST ---------- */
-    const currentYear = new Date().getFullYear();
+
+    
+    const maxYear = 2028;
+    const minYear = 1980;
+
     const years = [];
-    for (let y = currentYear; y >= 1980; y--) {
+    for (let y = maxYear; y >= minYear; y--) {
         years.push(y);
     }
 
-    /* ---------- FORM STATE ---------- */
+
+    
     const [formData, setFormData] = useState({
         fullName: "",
         email: "",
@@ -35,13 +42,22 @@ export default function ResumeBuilder() {
             endYear: ""
         },
 
+        hasPhd: false,
+
+        phd: {
+            course: "",
+            startYear: "",
+            endYear: ""
+        },
+
+
         projects: "",
         experience: "",
         skills: ""
     });
 
 
-    /* ---------- BASIC HANDLER ---------- */
+   
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -54,7 +70,7 @@ export default function ResumeBuilder() {
    
 
 
-    /* ---------- SUBMIT ---------- */
+    
     const handleSubmit = (e) => {
         
 
@@ -203,18 +219,23 @@ ${formData.skills}
                                     <div className="col-md-6">
                                         <select
                                             className="form-select bg-dark text-white border-secondary"
-                                            value={formData.graduation.startYear}
+                                            value={formData.graduation.endYear}
                                             onChange={(e) =>
                                                 setFormData({
                                                     ...formData,
-                                                    graduation: { ...formData.graduation, startYear: e.target.value }
+                                                    graduation: { ...formData.graduation, endYear: e.target.value }
                                                 })
                                             }
                                             required
                                         >
-                                            <option value="">Opted Year</option>
-                                            {years.map(y => <option key={y}>{y}</option>)}
+                                            <option value="">Completed Year</option>
+                                            {years
+                                                .filter(y => Number(y) > Number(formData.graduation.startYear))
+                                                .map(y => (
+                                                    <option key={y} value={y}>{y}</option>
+                                                ))}
                                         </select>
+
                                     </div>
                                     <div className="col-md-6">
                                         <select
@@ -274,20 +295,25 @@ ${formData.skills}
                                             <div className="col-md-6">
                                                 <select
                                                     className="form-select bg-dark text-white border-secondary"
-                                                    value={formData.postGraduation.startYear}
+                                                    value={formData.postGraduation.endYear}
                                                     onChange={(e) =>
                                                         setFormData({
                                                             ...formData,
                                                             postGraduation: {
                                                                 ...formData.postGraduation,
-                                                                startYear: e.target.value
+                                                                endYear: e.target.value
                                                             }
                                                         })
                                                     }
                                                 >
-                                                    <option value="">Opted Year</option>
-                                                    {years.map(y => <option key={y}>{y}</option>)}
+                                                    <option value="">Completed Year</option>
+                                                    {years
+                                                        .filter(y => Number(y) > Number(formData.postGraduation.startYear))
+                                                        .map(y => (
+                                                            <option key={y} value={y}>{y}</option>
+                                                        ))}
                                                 </select>
+
                                             </div>
                                             <div className="col-md-6">
                                                 <select
@@ -310,6 +336,88 @@ ${formData.skills}
                                         </div>
                                     </>
                                 )}
+                                {/* PHD SECTION */}
+                                <div className="form-check mb-3">
+                                    <input
+                                        className="form-check-input"
+                                        type="checkbox"
+                                        checked={formData.hasPhd}
+                                        onChange={(e) =>
+                                            setFormData({
+                                                ...formData,
+                                                hasPhd: e.target.checked
+                                            })
+                                        }
+                                    />
+                                    <label className="form-check-label">
+                                        I have completed / pursuing PhD
+                                    </label>
+                                </div>
+                                {formData.hasPhd && (
+                                    <>
+                                        <input
+                                            className="form-control bg-dark text-white border-secondary mb-3"
+                                            placeholder="PhD Field (e.g. PhD in Computer Science)"
+                                            value={formData.phd.course}
+                                            onChange={(e) =>
+                                                setFormData({
+                                                    ...formData,
+                                                    phd: {
+                                                        ...formData.phd,
+                                                        course: e.target.value
+                                                    }
+                                                })
+                                            }
+                                        />
+
+                                        <div className="row mb-4">
+                                            <div className="col-md-6">
+                                                <select
+                                                    className="form-select bg-dark text-white border-secondary"
+                                                    value={formData.phd.startYear}
+                                                    onChange={(e) =>
+                                                        setFormData({
+                                                            ...formData,
+                                                            phd: {
+                                                                ...formData.phd,
+                                                                startYear: e.target.value
+                                                            }
+                                                        })
+                                                    }
+                                                >
+                                                    <option value="">Opted Year</option>
+                                                    {years.map(y => (
+                                                        <option key={y} value={y}>{y}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+
+                                            <div className="col-md-6">
+                                                <select
+                                                    className="form-select bg-dark text-white border-secondary"
+                                                    value={formData.phd.endYear}
+                                                    onChange={(e) =>
+                                                        setFormData({
+                                                            ...formData,
+                                                            phd: {
+                                                                ...formData.phd,
+                                                                endYear: e.target.value
+                                                            }
+                                                        })
+                                                    }
+                                                >
+                                                    <option value="">Completed Year</option>
+                                                    {years
+                                                        .filter(y => Number(y) > Number(formData.phd.startYear))
+                                                        .map(y => (
+                                                            <option key={y} value={y}>{y}</option>
+                                                        ))}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
+
 
                                 {/* PROJECTS */}
                                 <div className="mb-4">
