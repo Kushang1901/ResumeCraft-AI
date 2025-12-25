@@ -1,188 +1,194 @@
-import React, { useState, useEffect } from "react";
+ï»¿import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+import { getRecaptchaToken } from "../utils/recaptcha";
 
-export default function Preview() {
-    const [resumeData, setResumeData] = useState(null);
-    const [aiOutput, setAiOutput] = useState("");
+export default function ResumeBuilder() {
+    const navigate = useNavigate();
 
-    useEffect(() => {
-        const savedData = sessionStorage.getItem("resumeData");
-        const savedAI = sessionStorage.getItem("aiOutput");
+    const maxYear = 2028;
+    const minYear = 1980;
 
-        if (savedData) setResumeData(JSON.parse(savedData));
-        if (savedAI) setAiOutput(savedAI);
-    }, []);
+    const years = [];
+    for (let y = maxYear; y >= minYear; y--) years.push(y);
 
-    const handleEdit = () => {
-        window.location.href = "/builder";
+    const [formData, setFormData] = useState({
+        fullName: "",
+        email: "",
+        phone: "",
+        professionalSummary: "",
+
+        graduation: { course: "", startYear: "", endYear: "" },
+
+        hasPostGraduation: false,
+        postGraduation: { course: "", startYear: "", endYear: "" },
+
+        hasPhd: false,
+        phd: { course: "", startYear: "", endYear: "" },
+
+        projects: "",
+        experience: "",
+        skills: ""
+    });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleDownload = async () => {
-        const resumeSection = document.getElementById("resume-preview");
-        if (!resumeSection) return;
+    // âœ… FIXED: async function
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-        const canvas = await html2canvas(resumeSection, { scale: 2 });
-        const imgData = canvas.toDataURL("image/png");
+        try {
+            // âœ… reCAPTCHA correctly used
+            const recaptchaToken = await getRecaptchaToken("GENERATE_RESUME");
 
-        const pdf = new jsPDF("p", "mm", "a4");
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+            sessionStorage.setItem("resumeData", JSON.stringify(formData));
 
-        pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-        pdf.save("Resume.pdf");
+            const prompt = `
+Create a professional resume.
+
+Name: ${formData.fullName}
+Email: ${formData.email}
+Phone: ${formData.phone}
+
+Professional Summary:
+${formData.professionalSummary || "Generate a strong summary"}
+
+Graduation:
+${formData.graduation.course}
+${formData.graduation.startYear} - ${formData.graduation.endYear}
+
+Post Graduation:
+${formData.hasPostGraduation
+                    ? `${formData.postGraduation.course} (${formData.postGraduation.startYear} - ${formData.postGraduation.endYear})`
+                    : "Not Applicable"}
+
+PhD:
+${formData.hasPhd
+                    ? `${formData.phd.course} (${formData.phd.startYear} - ${formData.phd.endYear})`
+                    : "Not Applicable"}
+
+Projects:
+${formData.projects}
+
+Experience:
+${formData.experience}
+
+Skills:
+${formData.skills}
+`;
+
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/generate`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ prompt, recaptchaToken })
+            });
+
+            const data = await res.json();
+            sessionStorage.setItem("aiOutput", data.result);
+            navigate("/preview");
+
+        } catch (err) {
+            alert("AI generation failed");
+        }
     };
-
-    if (!resumeData) {
-        return (
-            <div className="bg-dark text-white min-vh-100 d-flex align-items-center justify-content-center">
-                <div className="text-center">
-                    <h2>No resume data available</h2>
-                    <button onClick={handleEdit} className="btn btn-primary mt-3">
-                        Go to Builder
-                    </button>
-                </div>
-            </div>
-        );
-    }
-
-    const skillsArray = resumeData.skills
-        ? resumeData.skills.split(",").map(s => s.trim())
-        : [];
 
     return (
         <div className="bg-dark text-white min-vh-100">
             <Navbar />
 
             <div className="container py-5">
+                <div className="bg-black border border-secondary p-5 rounded">
 
-                {/* ACTION BUTTONS */}
-                <div className="d-flex justify-content-end gap-3 mb-4">
-                    <button className="btn btn-outline-light" onClick={handleEdit}>
-                        Edit Resume
-                    </button>
-                    <button className="btn btn-primary" onClick={handleDownload}>
-                        Download PDF
-                    </button>
-                </div>
+                    <h2 className="text-center mb-4">Build Your Resume</h2>
 
-                {/* RESUME */}
-                <div
-                    id="resume-preview"
-                    className="bg-white text-dark p-5 rounded shadow"
-                >
-                    {/* HEADER */}
-                    <div className="text-center border-bottom pb-3 mb-4">
-                        <h1 className="fw-bold">{resumeData.fullName}</h1>
-                        <p className="mb-0">
-                            {resumeData.email} | {resumeData.phone}
-                        </p>
-                    </div>
+                    <form onSubmit={handleSubmit}>
 
-                    {/* PROFESSIONAL SUMMARY */}
-                    {(aiOutput || resumeData.professionalSummary) && (
-                        <div className="mb-4">
-                            <h3 className="fw-bold border-bottom pb-2">
-                                Professional Summary
-                            </h3>
-                            <p style={{ whiteSpace: "pre-line" }}>
-                                {aiOutput && aiOutput !== "undefined"
-                                    ? aiOutput
-                                    : resumeData.professionalSummary}
-                            </p>
-                        </div>
-                    )}
+                        <input
+                            className="form-control mb-3"
+                            placeholder="Full Name"
+                            name="fullName"
+                            onChange={handleChange}
+                            required
+                        />
 
-                    {/* EDUCATION */}
-                    <div className="mb-4">
-                        <h3 className="fw-bold border-bottom pb-2">Education</h3>
+                        <input
+                            className="form-control mb-3"
+                            placeholder="Email"
+                            name="email"
+                            onChange={handleChange}
+                            required
+                        />
+
+                        <input
+                            className="form-control mb-3"
+                            placeholder="Phone"
+                            name="phone"
+                            onChange={handleChange}
+                            required
+                        />
+
+                        <textarea
+                            className="form-control mb-3"
+                            rows="3"
+                            name="professionalSummary"
+                            placeholder="Professional Summary (optional)"
+                            onChange={handleChange}
+                        />
 
                         {/* GRADUATION */}
-                        <div className="mt-3">
-                            <h5 className="fw-semibold">Graduation</h5>
-                            <p className="mb-1">{resumeData.graduation?.course}</p>
-                            <p className="text-muted">
-                                {resumeData.graduation?.startYear} – {resumeData.graduation?.endYear}
-                            </p>
-                        </div>
+                        <h5>Graduation</h5>
+                        <input
+                            className="form-control mb-2"
+                            placeholder="Course"
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    graduation: { ...formData.graduation, course: e.target.value }
+                                })
+                            }
+                            required
+                        />
 
-                        {/* POST GRADUATION */}
-                        {resumeData.hasPostGraduation && (
-                            <div className="mt-3">
-                                <h5 className="fw-semibold">Post Graduation</h5>
-                                <p className="mb-1">{resumeData.postGraduation?.course}</p>
-                                <p className="text-muted">
-                                    {resumeData.postGraduation?.startYear} – {resumeData.postGraduation?.endYear}
-                                </p>
-                            </div>
-                        )}
+                        <select
+                            className="form-select mb-3"
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    graduation: { ...formData.graduation, startYear: e.target.value }
+                                })
+                            }
+                            required
+                        >
+                            <option value="">Opted Year</option>
+                            {years.map(y => <option key={y}>{y}</option>)}
+                        </select>
 
-                        {/* PhD */}
-                        {resumeData.hasPhd && (
-                            <div className="mt-3">
-                                <h5 className="fw-semibold">PhD</h5>
-                                <p className="mb-1">{resumeData.phd?.course}</p>
-                                <p className="text-muted">
-                                    {resumeData.phd?.startYear} – {resumeData.phd?.endYear}
-                                </p>
-                            </div>
-                        )}
-                    </div>
+                        <select
+                            className="form-select mb-3"
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    graduation: { ...formData.graduation, endYear: e.target.value }
+                                })
+                            }
+                            required
+                        >
+                            <option value="">Completed Year</option>
+                            {years
+                                .filter(y => y > formData.graduation.startYear)
+                                .map(y => <option key={y}>{y}</option>)}
+                        </select>
 
-                    {/* PROJECTS */}
-                    {resumeData.projects && (
-                        <div className="mb-4">
-                            <h3 className="fw-bold border-bottom pb-2">Projects</h3>
-                            <p style={{ whiteSpace: "pre-line" }}>
-                                {resumeData.projects}
-                            </p>
-                        </div>
-                    )}
+                        <button className="btn btn-primary w-100 py-3">
+                            Generate Resume
+                        </button>
 
-                    {/* EXPERIENCE */}
-                    {resumeData.experience && (
-                        <div className="mb-4">
-                            <h3 className="fw-bold border-bottom pb-2">Experience</h3>
-                            <p style={{ whiteSpace: "pre-line" }}>
-                                {resumeData.experience}
-                            </p>
-                        </div>
-                    )}
-
-                    {/* SKILLS */}
-                    {skillsArray.length > 0 && (
-                        <div className="mb-3">
-                            <h3 className="fw-bold border-bottom pb-2">Skills</h3>
-                            <div className="d-flex flex-wrap gap-2">
-                                {skillsArray.map((skill, index) => (
-                                    <span key={index} className="badge bg-primary px-3 py-2">
-                                        {skill}
-                                    </span>
-                                ))}
-                            </div>
-                        </div>
-                    )}
+                    </form>
                 </div>
             </div>
-
-            {/* FOOTER */}
-            <footer className="bg-black border-top border-secondary py-4">
-                <div className="container text-center text-white-50">
-                    <p className="mb-1">&copy; 2025 ResumeCraft AI</p>
-                    <p className="mb-0">
-                        Designed &amp; Developed by{" "}
-                        <a
-                            href="https://kushangacharya.vercel.app"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-info fw-semibold text-decoration-none"
-                        >
-                            Kushang Acharya
-                        </a>
-                    </p>
-                </div>
-            </footer>
         </div>
     );
 }

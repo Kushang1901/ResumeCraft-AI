@@ -3,11 +3,15 @@ import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { app } from "../firebase";
+import { getRecaptchaToken } from "../utils/recaptcha";
+
 
 export default function Login() {
     const navigate = useNavigate();
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
+  
+
 
     const [formData, setFormData] = useState({
         email: "",
@@ -36,15 +40,29 @@ export default function Login() {
     // GOOGLE LOGIN
     const handleGoogleLogin = async () => {
         try {
-            await signInWithPopup(auth, googleProvider);
+            const recaptchaToken = await getRecaptchaToken("LOGIN");
 
-            alert("Google Login successful!");
+            const result = await signInWithPopup(auth, googleProvider);
+
+            await fetch(`${process.env.REACT_APP_API_URL}/signup`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    firstName: result.user.displayName?.split(" ")[0] || "",
+                    lastName: result.user.displayName?.split(" ")[1] || "",
+                    email: result.user.email,
+                    provider: "google",
+                    recaptchaToken
+                })
+            });
+
             navigate("/");
-
         } catch (error) {
-            alert(error.message);
+            alert("Google login failed");
+            console.error(error);
         }
     };
+
 
     return (
         <div className="bg-dark text-white min-vh-100">
