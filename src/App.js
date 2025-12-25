@@ -4,7 +4,7 @@ import ResumeBuilder from "./pages/ResumeBuilder";
 import Preview from "./pages/preview";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
-import SelectTemplate from "./pages/t1";
+import SelectTemplate from "./templates/t1";
 
 
 
