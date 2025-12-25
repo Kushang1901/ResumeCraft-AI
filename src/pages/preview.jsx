@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "../components/Navbar";
+import ClassicTemplate from "../templates/t1";
+
 
 export default function Preview() {
     const [resumeData, setResumeData] = useState(null);
