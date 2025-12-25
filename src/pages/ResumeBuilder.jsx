@@ -119,7 +119,7 @@ ${formData.skills}
 
             const data = await res.json();
             sessionStorage.setItem("aiOutput", data.result);
-            navigate("/t1");
+            navigate("/preview");
 
         } catch (err) {
             alert("AI generation failed");
