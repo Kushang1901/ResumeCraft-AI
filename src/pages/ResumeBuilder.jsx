@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "../components/Navbar";
@@ -119,7 +119,7 @@ ${formData.skills}
 
             const data = await res.json();
             sessionStorage.setItem("aiOutput", data.result);
-            navigate("/preview");
+            navigate("/t1");
 
         } catch (err) {
             alert("AI generation failed");
