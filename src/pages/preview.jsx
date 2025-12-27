@@ -83,8 +83,11 @@ export default function Preview() {
                     <div className="text-center mb-4 pb-4" style={{ borderBottom: "3px solid #0d6efd" }}>
                         <h1 className="fw-bold">{resumeData.fullName}</h1>
                         <p className="text-muted">
-                            <i class="fa-solid fa-envelope"></i> {resumeData.email} &nbsp; | &nbsp; <i class="fa-solid fa-mobile"></i> {resumeData.phone}
+                            <FontAwesomeIcon icon={faUserPlus} /> {resumeData.email}
+                            &nbsp; | &nbsp;
+                            <FontAwesomeIcon icon={faUserPlus} /> {resumeData.phone}
                         </p>
+
                     </div>
 
                     {/* AI OUTPUT */}
