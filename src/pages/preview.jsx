@@ -3,6 +3,9 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "../components/Navbar";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCoffee, faUserPlus } from '@fortawesome/free-solid-svg-icons'; 
+
 
 
 
@@ -80,7 +83,7 @@ export default function Preview() {
                     <div className="text-center mb-4 pb-4" style={{ borderBottom: "3px solid #0d6efd" }}>
                         <h1 className="fw-bold">{resumeData.fullName}</h1>
                         <p className="text-muted">
-                            ✉️ {resumeData.email} &nbsp; | &nbsp; 📱 {resumeData.phone}
+                            <i class="fa-solid fa-envelope"></i> {resumeData.email} &nbsp; | &nbsp; <i class="fa-solid fa-mobile"></i> {resumeData.phone}
                         </p>
                     </div>
 
