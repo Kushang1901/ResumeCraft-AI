@@ -47,6 +47,8 @@ export default function ResumeBuilder() {
         },
 
         projects: "",
+        achievements: "",
+
         experience: "",
         skills: ""
     });
@@ -483,6 +485,24 @@ ${formData.skills}
                                         placeholder="E-commerce Platform&#10;- Built a full-stack application using React and Node.js&#10;- Implemented payment gateway integration"
                                     ></textarea>
                                 </div>
+
+                                {/* ACHIEVEMENTS / CERTIFICATIONS */}
+                                <div className="mb-4">
+                                    <label className="form-label fw-semibold">
+                                        Achievements / Certifications (Optional)
+                                    </label>
+                                    <textarea
+                                        name="achievements"
+                                        rows="4"
+                                        className="form-control bg-dark text-white border-secondary"
+                                        placeholder="• AWS Certified Developer
+• Google Data Analytics Certificate
+• Employee of the Month"
+                                        value={formData.achievements}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+
 
                                 {/* EXPERIENCE */}
                                 <div className="mb-4">

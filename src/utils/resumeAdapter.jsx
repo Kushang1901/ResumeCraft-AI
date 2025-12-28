@@ -32,6 +32,7 @@
 
         experience: raw.experience || "",
         projects: raw.projects || "",
+        achievements: raw.achievements || "",
 
         skills: raw.skills
             ? raw.skills.split(",").map(s => s.trim())

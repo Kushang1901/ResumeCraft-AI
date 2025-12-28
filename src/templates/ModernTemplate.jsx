@@ -71,6 +71,17 @@ export default function ModernTemplate({ data }) {
                         <p style={{ whiteSpace: "pre-line" }}>{data.projects}</p>
                     </section>
                 )}
+
+                {/* ACHIEVEMENTS / CERTIFICATIONS */}
+                {data.achievements && (
+                    <section className="mb-4">
+                        <h5 className="fw-bold">ACHIEVEMENTS</h5>
+                        <p style={{ whiteSpace: "pre-line" }}>
+                            {data.achievements}
+                        </p>
+                    </section>
+                )}
+
             </div>
         </div>
     );

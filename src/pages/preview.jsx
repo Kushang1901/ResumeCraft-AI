@@ -8,7 +8,7 @@ import ClassicTemplate from "../templates/ClassicTemplate";
 import ModernTemplate from "../templates/ModernTemplate";
 import CreativeTemplate from "../templates/CreativeTemplate";
 
-// ✅ NEW: adapter import
+
 import { normalizeResumeData } from "../utils/resumeAdapter";
 
 export default function Preview() {

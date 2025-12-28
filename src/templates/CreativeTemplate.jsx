@@ -66,6 +66,17 @@ export default function CreativeTemplate({ data }) {
                     <p>{data.skills.join(", ")}</p>
                 </div>
             )}
+
+            {/* ACHIEVEMENTS / CERTIFICATIONS */}
+            {data.achievements && (
+                <div className="card p-4 mb-3">
+                    <h5 className="fw-bold">Achievements & Certifications</h5>
+                    <p style={{ whiteSpace: "pre-line" }}>
+                        {data.achievements}
+                    </p>
+                </div>
+            )}
+
         </div>
     );
 }
