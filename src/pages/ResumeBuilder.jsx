@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "../components/Navbar";
@@ -49,21 +49,39 @@ export default function ResumeBuilder() {
         skills: ""
     });
 
+    useEffect(() => {
+        const savedData = sessionStorage.getItem("resumeData");
+        if (savedData) {
+            setFormData(JSON.parse(savedData));
+        }
+    }, []);
+
+
     /* ================= HANDLERS ================= */
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        setFormData(prev => {
+            const updated = { ...prev, [name]: value };
+            sessionStorage.setItem("resumeData", JSON.stringify(updated));
+            return updated;
+        });
     };
 
+
     const handleNestedChange = (section, field, value) => {
-        setFormData(prev => ({
-            ...prev,
-            [section]: {
-                ...prev[section],
-                [field]: value
-            }
-        }));
+        setFormData(prev => {
+            const updated = {
+                ...prev,
+                [section]: {
+                    ...prev[section],
+                    [field]: value
+                }
+            };
+            sessionStorage.setItem("resumeData", JSON.stringify(updated));
+            return updated;
+        });
     };
+
 
     /* ================= SUBMIT ================= */
     const handleSubmit = async (e) => {
