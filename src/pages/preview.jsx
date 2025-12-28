@@ -3,11 +3,10 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "../components/Navbar";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCoffee, faUserPlus } from '@fortawesome/free-solid-svg-icons'; 
 
-
-
+import ClassicTemplate from "../templates/ClassicTemplate";
+import ModernTemplate from "../templates/ModernTemplate";
+import CreativeTemplate from "../templates/CreativeTemplate";
 
 export default function Preview() {
     const [resumeData, setResumeData] = useState(null);
@@ -53,9 +52,25 @@ export default function Preview() {
         );
     }
 
-    const skillsArray = resumeData.skills
-        ? resumeData.skills.split(",").map(s => s.trim())
-        : [];
+    /* ================= TEMPLATE LOGIC ================= */
+
+    const selectedTemplate =
+        sessionStorage.getItem("selectedTemplate") || "classic";
+
+    const renderTemplate = () => {
+        switch (selectedTemplate) {
+            case "modern":
+                return <ModernTemplate resumeData={resumeData} aiOutput={aiOutput} />;
+
+            case "creative":
+                return <CreativeTemplate resumeData={resumeData} aiOutput={aiOutput} />;
+
+            default:
+                return <ClassicTemplate resumeData={resumeData} aiOutput={aiOutput} />;
+        }
+    };
+
+    /* ================= UI ================= */
 
     return (
         <div className="bg-dark text-white min-vh-100">
@@ -73,92 +88,13 @@ export default function Preview() {
 
                 <div
                     id="resume-preview"
-                    className="bg-white text-dark p-5"
+                    className="bg-white text-dark"
                     style={{
                         borderRadius: "12px",
                         boxShadow: "0 8px 30px rgba(0,0,0,0.5)"
                     }}
                 >
-                    {/* HEADER */}
-                    <div className="text-center mb-4 pb-4" style={{ borderBottom: "3px solid #0d6efd" }}>
-                        <h1 className="fw-bold">{resumeData.fullName}</h1>
-                        <p className="text-muted">
-                            <FontAwesomeIcon icon={faUserPlus} /> {resumeData.email}
-                            &nbsp; | &nbsp;
-                            <FontAwesomeIcon icon={faUserPlus} /> {resumeData.phone}
-                        </p>
-
-                    </div>
-
-                    {/* AI OUTPUT */}
-                    {aiOutput && aiOutput !== "undefined" ? (
-                        <div style={{ whiteSpace: "pre-line", lineHeight: "1.8" }}>
-                            {aiOutput}
-                        </div>
-                    ) : (
-                        <>
-                            {/* PROFESSIONAL SUMMARY */}
-                            {resumeData.professionalSummary && (
-                                <section className="mb-4">
-                                    <h5 className="fw-bold text-primary">PROFESSIONAL SUMMARY</h5>
-                                    <p>{resumeData.professionalSummary}</p>
-                                </section>
-                            )}
-
-                            {/* EDUCATION */}
-                            <section className="mb-4">
-                                <h5 className="fw-bold text-primary">EDUCATION</h5>
-                                <p>
-                                    <strong>{resumeData.graduation.course}</strong><br />
-                                    {resumeData.graduation.startYear} - {resumeData.graduation.endYear}
-                                </p>
-
-                                {resumeData.hasPostGraduation && (
-                                    <p>
-                                        <strong>{resumeData.postGraduation.course}</strong><br />
-                                        {resumeData.postGraduation.startYear} - {resumeData.postGraduation.endYear}
-                                    </p>
-                                )}
-
-                                {resumeData.hasPhd && (
-                                    <p>
-                                        <strong>{resumeData.phd.course}</strong><br />
-                                        {resumeData.phd.startYear} - {resumeData.phd.endYear}
-                                    </p>
-                                )}
-                            </section>
-
-                            {/* PROJECTS */}
-                            {resumeData.projects && (
-                                <section className="mb-4">
-                                    <h5 className="fw-bold text-primary">PROJECTS</h5>
-                                    <p style={{ whiteSpace: "pre-line" }}>{resumeData.projects}</p>
-                                </section>
-                            )}
-
-                            {/* EXPERIENCE */}
-                            {resumeData.experience && (
-                                <section className="mb-4">
-                                    <h5 className="fw-bold text-primary">EXPERIENCE</h5>
-                                    <p style={{ whiteSpace: "pre-line" }}>{resumeData.experience}</p>
-                                </section>
-                            )}
-
-                            {/* SKILLS */}
-                            {skillsArray.length > 0 && (
-                                <section>
-                                    <h5 className="fw-bold text-primary">SKILLS</h5>
-                                    <div className="d-flex flex-wrap gap-2">
-                                        {skillsArray.map((skill, i) => (
-                                            <span key={i} className="badge bg-primary">
-                                                {skill}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </section>
-                            )}
-                        </>
-                    )}
+                    {renderTemplate()}
                 </div>
             </div>
 
