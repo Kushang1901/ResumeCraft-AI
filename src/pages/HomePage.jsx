@@ -1,12 +1,6 @@
 ﻿import React from 'react';
-//import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from "../components/Navbar";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-
-
-
-
+import { Link, useNavigate } from "react-router-dom";
 
 export default function HomePage() {
     const navigate = useNavigate();
@@ -20,14 +14,19 @@ export default function HomePage() {
                 <div className="container py-5">
                     <div className="row justify-content-center text-center py-5">
                         <div className="col-lg-8">
-                            <h1 className="display-1 fw-bold mb-4" style={{ letterSpacing: '-0.02em' }}>
+                            <h1
+                                className="display-1 fw-bold mb-4"
+                                style={{ letterSpacing: '-0.02em' }}
+                            >
                                 ResumeCraft AI
                             </h1>
                             <p className="lead fs-3 text-white-50 mb-5">
                                 Create AI-crafted resumes instantly — smart, simple and professional.
                             </p>
+
+                            {/* 🔴 UPDATED LINK */}
                             <Link
-                                to="/builder"
+                                to="/templates"
                                 className="btn btn-primary btn-lg px-5 py-3 fw-semibold"
                                 style={{
                                     fontSize: "1.1rem",
@@ -48,10 +47,13 @@ export default function HomePage() {
                 <div className="container py-5">
                     <div className="row g-4">
                         <div className="col-md-4">
-                            <div className="card bg-black border-secondary h-100" style={{
-                                borderRadius: '12px',
-                                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
-                            }}>
+                            <div
+                                className="card bg-black border-secondary h-100"
+                                style={{
+                                    borderRadius: '12px',
+                                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
+                                }}
+                            >
                                 <div className="card-body p-4 text-center">
                                     <h3 className="h4 fw-bold mb-3">AI Generated Content</h3>
                                     <p className="text-white-50 mb-0">
@@ -62,10 +64,13 @@ export default function HomePage() {
                         </div>
 
                         <div className="col-md-4">
-                            <div className="card bg-black border-secondary h-100" style={{
-                                borderRadius: '12px',
-                                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
-                            }}>
+                            <div
+                                className="card bg-black border-secondary h-100"
+                                style={{
+                                    borderRadius: '12px',
+                                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
+                                }}
+                            >
                                 <div className="card-body p-4 text-center">
                                     <h3 className="h4 fw-bold mb-3">Fast Resume Builder</h3>
                                     <p className="text-white-50 mb-0">
@@ -76,10 +81,13 @@ export default function HomePage() {
                         </div>
 
                         <div className="col-md-4">
-                            <div className="card bg-black border-secondary h-100" style={{
-                                borderRadius: '12px',
-                                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
-                            }}>
+                            <div
+                                className="card bg-black border-secondary h-100"
+                                style={{
+                                    borderRadius: '12px',
+                                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
+                                }}
+                            >
                                 <div className="card-body p-4 text-center">
                                     <h3 className="h4 fw-bold mb-3">Download as PDF</h3>
                                     <p className="text-white-50 mb-0">
@@ -111,7 +119,6 @@ export default function HomePage() {
                             >
                                 Start Now
                             </button>
-
                         </div>
                     </div>
                 </div>
