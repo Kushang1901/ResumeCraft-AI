@@ -9,6 +9,21 @@ export default function CreativeTemplate({ resumeData, aiOutput }) {
         <div className="p-5">
             {/* HEADER */}
             <div className="text-center mb-4">
+                {resumeData.profilePhoto && (
+                    <img
+                        src={resumeData.profilePhoto}
+                        alt="Profile"
+                        style={{
+                            width: "130px",
+                            height: "130px",
+                            objectFit: "cover",
+                            borderRadius: "20px",
+                            marginBottom: "15px",
+                            border: "3px solid #333"
+                        }}
+                    />
+                )}
+
                 <h1 className="fw-bold">{resumeData.fullName}</h1>
                 <p className="text-muted">
                     {resumeData.email} • {resumeData.phone}

@@ -9,6 +9,21 @@ export default function ModernTemplate({ resumeData, aiOutput }) {
         <div className="d-flex" style={{ minHeight: "100%" }}>
             {/* LEFT SIDEBAR */}
             <div className="p-4 text-white" style={{ width: "30%", background: "#0d6efd" }}>
+                {resumeData.profilePhoto && (
+                    <img
+                        src={resumeData.profilePhoto}
+                        alt="Profile"
+                        style={{
+                            width: "100px",
+                            height: "100px",
+                            objectFit: "cover",
+                            borderRadius: "50%",
+                            marginBottom: "15px",
+                            border: "2px solid white"
+                        }}
+                    />
+                )}
+
                 <h3 className="fw-bold">{resumeData.fullName}</h3>
                 <p>{resumeData.email}</p>
                 <p>{resumeData.phone}</p>

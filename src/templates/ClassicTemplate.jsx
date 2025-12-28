@@ -9,6 +9,21 @@ export default function ClassicTemplate({ resumeData, aiOutput }) {
         <div className="p-5">
             {/* HEADER */}
             <div className="text-center mb-4">
+                {resumeData.profilePhoto && (
+                    <img
+                        src={resumeData.profilePhoto}
+                        alt="Profile"
+                        style={{
+                            width: "120px",
+                            height: "120px",
+                            objectFit: "cover",
+                            borderRadius: "50%",
+                            marginBottom: "12px",
+                            border: "2px solid #0d6efd"
+                        }}
+                    />
+                )}
+
                 <h1 className="fw-bold">{resumeData.fullName}</h1>
                 <p className="text-muted">
                     {resumeData.email} | {resumeData.phone}

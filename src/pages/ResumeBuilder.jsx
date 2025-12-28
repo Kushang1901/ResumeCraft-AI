@@ -19,6 +19,8 @@ export default function ResumeBuilder() {
 
     /* ================= STATE ================= */
     const [formData, setFormData] = useState({
+        profilePhoto: "",
+
         fullName: "",
         email: "",
         phone: "",
@@ -81,6 +83,22 @@ export default function ResumeBuilder() {
             return updated;
         });
     };
+
+    const handlePhotoUpload = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setFormData(prev => {
+                const updated = { ...prev, profilePhoto: reader.result };
+                sessionStorage.setItem("resumeData", JSON.stringify(updated));
+                return updated;
+            });
+        };
+        reader.readAsDataURL(file);
+    };
+
 
 
     /* ================= SUBMIT ================= */
@@ -213,6 +231,37 @@ ${formData.skills}
                                         />
                                     </div>
                                 </div>
+
+                                {/* PROFILE PHOTO (OPTIONAL) */}
+                                <div className="mb-4">
+                                    <label className="form-label fw-semibold">
+                                        Profile Photo (Optional)
+                                    </label>
+
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        className="form-control bg-dark text-white border-secondary"
+                                        onChange={handlePhotoUpload}
+                                    />
+
+                                    {formData.profilePhoto && (
+                                        <div className="mt-3">
+                                            <img
+                                                src={formData.profilePhoto}
+                                                alt="Profile Preview"
+                                                style={{
+                                                    width: "120px",
+                                                    height: "120px",
+                                                    objectFit: "cover",
+                                                    borderRadius: "50%",
+                                                    border: "2px solid #0d6efd"
+                                                }}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+
 
                                 <div className="mb-4">
                                     <label htmlFor="professionalSummary" className="form-label fw-semibold">
