@@ -1,17 +1,13 @@
 ﻿import React from "react";
 
-export default function ClassicTemplate({ resumeData, aiOutput }) {
-    const skills = resumeData.skills
-        ? resumeData.skills.split(",").map(s => s.trim())
-        : [];
-
+export default function ClassicTemplate({ data }) {
     return (
         <div className="p-5">
             {/* HEADER */}
             <div className="text-center mb-4">
-                {resumeData.profilePhoto && (
+                {data.basics.photo && (
                     <img
-                        src={resumeData.profilePhoto}
+                        src={data.basics.photo}
                         alt="Profile"
                         style={{
                             width: "120px",
@@ -24,71 +20,50 @@ export default function ClassicTemplate({ resumeData, aiOutput }) {
                     />
                 )}
 
-                <h1 className="fw-bold">{resumeData.fullName}</h1>
+                <h1 className="fw-bold">{data.basics.name}</h1>
                 <p className="text-muted">
-                    {resumeData.email} | {resumeData.phone}
+                    {data.basics.email} | {data.basics.phone}
                 </p>
             </div>
 
-            {/* SUMMARY / AI OUTPUT */}
+            {/* SUMMARY */}
             <section className="mb-4">
                 <h5 className="fw-bold">PROFESSIONAL SUMMARY</h5>
-                <p>
-                    {aiOutput && aiOutput !== "undefined"
-                        ? aiOutput
-                        : resumeData.professionalSummary}
-                </p>
+                <p>{data.summary}</p>
             </section>
 
             {/* EDUCATION */}
             <section className="mb-4">
                 <h5 className="fw-bold">EDUCATION</h5>
-
-                <p>
-                    <strong>{resumeData.graduation.course}</strong><br />
-                    {resumeData.graduation.startYear} – {resumeData.graduation.endYear}
-                </p>
-
-                {resumeData.hasPostGraduation && (
-                    <p>
-                        <strong>{resumeData.postGraduation.course}</strong><br />
-                        {resumeData.postGraduation.startYear} – {resumeData.postGraduation.endYear}
+                {data.education.map((edu, i) => (
+                    <p key={i}>
+                        <strong>{edu.course}</strong><br />
+                        {edu.start} – {edu.end}
                     </p>
-                )}
-
-                {resumeData.hasPhd && (
-                    <p>
-                        <strong>{resumeData.phd.course}</strong><br />
-                        {resumeData.phd.startYear} – {resumeData.phd.endYear}
-                    </p>
-                )}
+                ))}
             </section>
 
             {/* EXPERIENCE */}
-            {resumeData.experience && (
+            {data.experience && (
                 <section className="mb-4">
                     <h5 className="fw-bold">EXPERIENCE</h5>
-                    <p style={{ whiteSpace: "pre-line" }}>
-                        {resumeData.experience}
-                    </p>
+                    <p style={{ whiteSpace: "pre-line" }}>{data.experience}</p>
                 </section>
             )}
 
             {/* PROJECTS */}
-            {resumeData.projects && (
+            {data.projects && (
                 <section className="mb-4">
                     <h5 className="fw-bold">PROJECTS</h5>
-                    <p style={{ whiteSpace: "pre-line" }}>
-                        {resumeData.projects}
-                    </p>
+                    <p style={{ whiteSpace: "pre-line" }}>{data.projects}</p>
                 </section>
             )}
 
             {/* SKILLS */}
-            {skills.length > 0 && (
+            {data.skills.length > 0 && (
                 <section>
                     <h5 className="fw-bold">SKILLS</h5>
-                    <p>{skills.join(", ")}</p>
+                    <p>{data.skills.join(", ")}</p>
                 </section>
             )}
         </div>

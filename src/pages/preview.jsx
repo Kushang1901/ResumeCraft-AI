@@ -8,6 +8,9 @@ import ClassicTemplate from "../templates/ClassicTemplate";
 import ModernTemplate from "../templates/ModernTemplate";
 import CreativeTemplate from "../templates/CreativeTemplate";
 
+// ✅ NEW: adapter import
+import { normalizeResumeData } from "../utils/resumeAdapter";
+
 export default function Preview() {
     const [resumeData, setResumeData] = useState(null);
     const [aiOutput, setAiOutput] = useState("");
@@ -52,6 +55,10 @@ export default function Preview() {
         );
     }
 
+    /* ================= NORMALIZE DATA (KEY STEP) ================= */
+
+    const data = normalizeResumeData(resumeData);
+
     /* ================= TEMPLATE LOGIC ================= */
 
     const selectedTemplate =
@@ -60,13 +67,13 @@ export default function Preview() {
     const renderTemplate = () => {
         switch (selectedTemplate) {
             case "modern":
-                return <ModernTemplate resumeData={resumeData} aiOutput={aiOutput} />;
+                return <ModernTemplate data={data} />;
 
             case "creative":
-                return <CreativeTemplate resumeData={resumeData} aiOutput={aiOutput} />;
+                return <CreativeTemplate data={data} />;
 
             default:
-                return <ClassicTemplate resumeData={resumeData} aiOutput={aiOutput} />;
+                return <ClassicTemplate data={data} />;
         }
     };
 
