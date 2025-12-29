@@ -23,7 +23,7 @@ export default function Signup() {
         }));
     };
 
-    // ✅ async function — await allowed here
+    // ✅ UPDATED GOOGLE SIGNUP HANDLER
     const handleGoogleSignup = async () => {
         try {
             const recaptchaToken = await getRecaptchaToken("SIGNUP");
@@ -31,22 +31,36 @@ export default function Signup() {
             const result = await signInWithPopup(auth, googleProvider);
             const user = result.user;
 
-            await fetch(`${process.env.REACT_APP_API_URL}/signup`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    firstName: user.displayName?.split(" ")[0] || "",
-                    lastName: user.displayName?.split(" ")[1] || "",
-                    email: user.email,
-                    provider: "google",
-                    recaptchaToken
-                })
-            });
+            const response = await fetch(
+                `${process.env.REACT_APP_API_URL}/signup`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        firstName: user.displayName?.split(" ")[0] || "",
+                        lastName: user.displayName?.split(" ").slice(1).join(" ") || "",
+                        email: user.email,
+                        provider: "google",
+                        recaptchaToken
+                    })
+                }
+            );
 
+            const data = await response.json();
+
+            // 🔴 ALREADY REGISTERED USER
+            if (!data.isNewUser) {
+                alert("You already have an account. Please login.");
+                navigate("/login");
+                return;
+            }
+
+            // 🟢 NEW USER
             navigate("/builder");
 
         } catch (err) {
-            alert("Signup failed");
+            console.error(err);
+            alert("Signup failed. Please try again.");
         }
     };
 
@@ -57,6 +71,9 @@ export default function Signup() {
             <div className="container py-5">
                 <div className="text-center mb-4">
                     <h2>Create your account</h2>
+                    <p className="text-white-50">
+                        Sign up to start building professional resumes
+                    </p>
                 </div>
 
                 <div className="text-center">
