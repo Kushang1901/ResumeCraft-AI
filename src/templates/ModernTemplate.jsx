@@ -3,6 +3,30 @@
 export default function ModernTemplate({ data }) {
 
     const links = data?.basics?.links || {};
+    const getUsername = (url, type) => {
+        if (!url) return "";
+
+        try {
+            const cleanUrl = url.replace(/^https?:\/\//, "").replace(/\/$/, "");
+
+            if (type === "github") {
+                return cleanUrl.replace("github.com/", "");
+            }
+
+            if (type === "linkedin") {
+                return cleanUrl.replace("linkedin.com/in/", "");
+            }
+
+            if (type === "portfolio") {
+                return cleanUrl;
+            }
+
+            return cleanUrl;
+        } catch {
+            return url;
+        }
+    };
+
 
     return (
         <div className="d-flex" style={{ minHeight: "100%" }}>
@@ -35,25 +59,44 @@ export default function ModernTemplate({ data }) {
                     </p>
                 )}
 
-                <div className="d-flex gap-3 mt-3">
+                <div className="d-flex align-items-center gap-4 mt-3 flex-wrap">
                     {links.github && (
-                        <a href={links.github} target="_blank" rel="noreferrer">
-                            <i className="fab fa-github fa-lg"></i>
+                        <a
+                            href={links.github}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="d-flex align-items-center gap-2 text-decoration-none text-dark"
+                        >
+                            <i className="fab fa-github fa-lg text-dark"></i>
+                            <span>{getUsername(links.github, "github")}</span>
                         </a>
                     )}
 
                     {links.linkedin && (
-                        <a href={links.linkedin} target="_blank" rel="noreferrer">
-                            <i className="fab fa-linkedin fa-lg"></i>
+                        <a
+                            href={links.linkedin}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="d-flex align-items-center gap-2 text-decoration-none text-dark"
+                        >
+                            <i className="fab fa-linkedin fa-lg text-primary"></i>
+                            <span>{getUsername(links.linkedin, "linkedin")}</span>
                         </a>
                     )}
 
                     {links.portfolio && (
-                        <a href={links.portfolio} target="_blank" rel="noreferrer">
-                            <i className="fa-solid fa-globe fa-lg"></i>
+                        <a
+                            href={links.portfolio}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="d-flex align-items-center gap-2 text-decoration-none text-dark"
+                        >
+                            <i className="fa-solid fa-globe fa-lg text-success"></i>
+                            <span>{getUsername(links.portfolio, "portfolio")}</span>
                         </a>
                     )}
                 </div>
+
 
 
                 <hr />
