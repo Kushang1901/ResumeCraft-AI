@@ -27,9 +27,9 @@ export default function ResumeBuilder() {
         email: "",
         phone: "",
 
-        portfolio: "",
-        linkedin: "",
-        github: "",
+        portfolio: raw.portfolio || "",
+        linkedin: raw.linkedin || "",
+        github: raw.github || "",
 
         professionalSummary: "",
 
@@ -117,21 +117,30 @@ export default function ResumeBuilder() {
         try {
             const recaptchaToken = await getRecaptchaToken("GENERATE_RESUME");
 
+            // ✅ Always save complete data
             sessionStorage.setItem("resumeData", JSON.stringify(formData));
 
             const prompt = `
 Create a professional resume.
 
 Name: ${formData.fullName}
+Role: ${formData.role || "Not specified"}
+
+Contact:
 Email: ${formData.email}
 Phone: ${formData.phone}
 
-Professional Summary:
-${formData.professionalSummary || "Generate a strong summary"}
+Professional Links:
+Portfolio: ${formData.portfolio || "Not provided"}
+LinkedIn: ${formData.linkedin || "Not provided"}
+GitHub: ${formData.github || "Not provided"}
 
-Graduation:
-${formData.graduation.course}
-${formData.graduation.startYear} - ${formData.graduation.endYear}
+Professional Summary:
+${formData.professionalSummary || "Generate a strong professional summary."}
+
+Education:
+Graduation: ${formData.graduation.course}
+(${formData.graduation.startYear} - ${formData.graduation.endYear})
 
 Post Graduation:
 ${formData.hasPostGraduation
@@ -144,13 +153,13 @@ ${formData.hasPhd
                     : "Not Applicable"}
 
 Projects:
-${formData.projects}
+${formData.projects || "Not provided"}
 
 Experience:
-${formData.experience}
+${formData.experience || "Not provided"}
 
 Skills:
-${formData.skills}
+${formData.skills || "Not provided"}
 `;
 
             const res = await fetch(
@@ -163,11 +172,13 @@ ${formData.skills}
             );
 
             const data = await res.json();
+
             sessionStorage.setItem("aiOutput", data.result);
             navigate("/preview");
 
         } catch (err) {
-            alert("AI generation failed");
+            console.error(err);
+            alert("AI generation failed. Please try again.");
         }
     };
 

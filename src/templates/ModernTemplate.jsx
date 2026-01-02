@@ -1,4 +1,6 @@
 ﻿import React from "react";
+const links = data.basics.links || {};
+
 
 export default function ModernTemplate({ data }) {
     return (
@@ -33,24 +35,25 @@ export default function ModernTemplate({ data }) {
                 )}
 
                 <div className="d-flex gap-3 mt-3">
-                    {data.basics.links.github && (
-                        <a href={data.basics.links.github} target="_blank" rel="noreferrer">
+                    {links.github && (
+                        <a href={links.github} target="_blank" rel="noreferrer">
                             <i className="fab fa-github fa-lg"></i>
                         </a>
                     )}
 
-                    {data.basics.links.linkedin && (
-                        <a href={data.basics.links.linkedin} target="_blank" rel="noreferrer">
+                    {links.linkedin && (
+                        <a href={links.linkedin} target="_blank" rel="noreferrer">
                             <i className="fab fa-linkedin fa-lg"></i>
                         </a>
                     )}
 
-                    {data.basics.links.portfolio && (
-                        <a href={data.basics.links.portfolio} target="_blank" rel="noreferrer">
+                    {links.portfolio && (
+                        <a href={links.portfolio} target="_blank" rel="noreferrer">
                             <i className="fa-solid fa-globe fa-lg"></i>
                         </a>
                     )}
                 </div>
+
 
                 <hr />
 
