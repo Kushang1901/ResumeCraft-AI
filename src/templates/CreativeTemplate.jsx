@@ -1,8 +1,9 @@
 ﻿import React from "react";
-const links = data.basics.links || {};
-
 
 export default function CreativeTemplate({ data }) {
+
+    const links = data?.basics?.links || {};
+
     return (
         <div className="p-5">
             {/* HEADER */}

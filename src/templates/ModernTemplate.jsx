@@ -1,8 +1,9 @@
 ﻿import React from "react";
-const links = data.basics.links || {};
-
 
 export default function ModernTemplate({ data }) {
+
+    const links = data?.basics?.links || {};
+
     return (
         <div className="d-flex" style={{ minHeight: "100%" }}>
             {/* LEFT SIDEBAR */}
