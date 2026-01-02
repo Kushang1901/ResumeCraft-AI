@@ -22,8 +22,15 @@ export default function ResumeBuilder() {
         profilePhoto: "",
 
         fullName: "",
+        role: "",
+
         email: "",
         phone: "",
+
+        portfolio: "",
+        linkedin: "",
+        github: "",
+
         professionalSummary: "",
 
         graduation: {
@@ -233,6 +240,59 @@ ${formData.skills}
                                         />
                                     </div>
                                 </div>
+
+                                {/* ROLE */}
+                                <div className="mb-4">
+                                    <label className="form-label fw-semibold">Your Role</label>
+                                    <input
+                                        type="text"
+                                        name="role"
+                                        className="form-control bg-dark text-white border-secondary"
+                                        placeholder="Web Developer / Java Developer / DevOps Engineer"
+                                        value={formData.role}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+
+                                {/* LINKS */}
+                                <div className="row mb-4">
+                                    <div className="col-md-4">
+                                        <label className="form-label fw-semibold">Portfolio</label>
+                                        <input
+                                            type="url"
+                                            name="portfolio"
+                                            className="form-control bg-dark text-white border-secondary"
+                                            placeholder="https://yourportfolio.com"
+                                            value={formData.portfolio}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+
+                                    <div className="col-md-4">
+                                        <label className="form-label fw-semibold">LinkedIn</label>
+                                        <input
+                                            type="url"
+                                            name="linkedin"
+                                            className="form-control bg-dark text-white border-secondary"
+                                            placeholder="https://linkedin.com/in/username"
+                                            value={formData.linkedin}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+
+                                    <div className="col-md-4">
+                                        <label className="form-label fw-semibold">GitHub</label>
+                                        <input
+                                            type="url"
+                                            name="github"
+                                            className="form-control bg-dark text-white border-secondary"
+                                            placeholder="https://github.com/username"
+                                            value={formData.github}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                </div>
+
 
                                 {/* PROFILE PHOTO (OPTIONAL) */}
                                 <div className="mb-4">

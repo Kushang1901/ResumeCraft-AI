@@ -24,6 +24,32 @@ export default function CreativeTemplate({ data }) {
                 <p className="text-muted">
                     {data.basics.email} • {data.basics.phone}
                 </p>
+                {data.basics.role && (
+                    <p className="fw-semibold mt-2">
+                        {data.basics.role}
+                    </p>
+                )}
+
+                <div className="d-flex justify-content-center gap-4 mt-3">
+                    {data.basics.links.github && (
+                        <a href={data.basics.links.github} target="_blank" rel="noreferrer">
+                            <i className="fab fa-github fa-xl"></i>
+                        </a>
+                    )}
+
+                    {data.basics.links.linkedin && (
+                        <a href={data.basics.links.linkedin} target="_blank" rel="noreferrer">
+                            <i className="fab fa-linkedin fa-xl"></i>
+                        </a>
+                    )}
+
+                    {data.basics.links.portfolio && (
+                        <a href={data.basics.links.portfolio} target="_blank" rel="noreferrer">
+                            <i className="fa-solid fa-globe fa-xl"></i>
+                        </a>
+                    )}
+                </div>
+
             </div>
 
             {/* SUMMARY */}

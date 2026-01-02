@@ -25,6 +25,31 @@ export default function ClassicTemplate({ data }) {
                     {data.basics.email} | {data.basics.phone}
                 </p>
             </div>
+            {/*Links and Portfolio */}
+            {data.basics.role && (
+                <p className="fw-semibold text-primary">{data.basics.role}</p>
+            )}
+
+            <div className="d-flex justify-content-center gap-3 mt-2">
+                {data.basics.links.github && (
+                    <a href={data.basics.links.github} target="_blank" rel="noreferrer">
+                        <i className="fab fa-github fa-lg"></i>
+                    </a>
+                )}
+
+                {data.basics.links.linkedin && (
+                    <a href={data.basics.links.linkedin} target="_blank" rel="noreferrer">
+                        <i className="fab fa-linkedin fa-lg"></i>
+                    </a>
+                )}
+
+                {data.basics.links.portfolio && (
+                    <a href={data.basics.links.portfolio} target="_blank" rel="noreferrer">
+                        <i className="fa-solid fa-globe fa-lg"></i>
+                    </a>
+                )}
+            </div>
+
 
             {/* SUMMARY */}
             <section className="mb-4">
