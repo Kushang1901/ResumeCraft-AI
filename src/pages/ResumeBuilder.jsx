@@ -27,9 +27,9 @@ export default function ResumeBuilder() {
         email: "",
         phone: "",
 
-        portfolio: raw.portfolio || "",
-        linkedin: raw.linkedin || "",
-        github: raw.github || "",
+        portfolio: "",
+        linkedin: "",
+        github: "",
 
         professionalSummary: "",
 
