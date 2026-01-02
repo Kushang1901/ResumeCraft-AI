@@ -1,11 +1,16 @@
 ﻿export function normalizeResumeData(raw) {
     return {
         basics: {
-            name: raw.fullName || "",
-            email: raw.email || "",
-            phone: raw.phone || "",
-            photo: raw.profilePhoto || ""
-        },
+            name: raw.fullName,
+            role: raw.role || "",
+            email: raw.email,
+            phone: raw.phone,
+            photo: raw.profilePhoto,
+            links: {
+                portfolio: raw.portfolio || "",
+                linkedin: raw.linkedin || "",
+                github: raw.github || ""
+            },
 
         summary: raw.professionalSummary || "",
 
